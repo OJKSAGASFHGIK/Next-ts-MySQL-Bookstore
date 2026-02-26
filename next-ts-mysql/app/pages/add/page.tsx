@@ -1,5 +1,6 @@
 "use client";   
 import axios from "axios";
+import { API_URL } from "../../api";
 
 import { useState } from "react"
 import { useRouter } from "next/navigation";
@@ -24,7 +25,7 @@ export default function add(){
         e.preventDefault();
         
         try {
-            await axios.post("http://localhost:8800/books", book)
+            await axios.post(`${API_URL}/books`, book)
             navigate.push("/");
         } catch(err){ console.log(err) }
     }

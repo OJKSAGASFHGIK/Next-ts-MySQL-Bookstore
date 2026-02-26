@@ -1,6 +1,7 @@
 "use client";
 
 import axios from "axios";
+import { API_URL } from "./api";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -18,7 +19,7 @@ export default function Home() {
   const [books, setBooks] = useState<books[]>([]);
   const handleDelete = async(id: number) => {
     try {
-      await axios.delete(`http://localhost:8800/books/${id}`)
+      await axios.delete(`${API_URL}/books/${id}`)
       window.location.reload()
     } catch(err){ console.log(err) }
   }
@@ -26,7 +27,7 @@ export default function Home() {
   useEffect(() => {
     const fetchBooks = async() => {
       try {
-        const res = await axios.get("http://localhost:8800/books");
+        const res = await axios.get(`${API_URL}/books`);
         setBooks(res.data);
       } catch(err){
         console.log(err);

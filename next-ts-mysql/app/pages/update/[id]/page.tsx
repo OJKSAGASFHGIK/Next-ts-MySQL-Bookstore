@@ -1,6 +1,8 @@
 "use client";
 
 import axios from "axios";
+import { API_URL } from "../../../api";
+
 import { use, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -39,7 +41,7 @@ export default function BookUpdate( props: {params: Promise<{ id: string }>;} ){
       e.preventDefault();
       
       try {
-          await axios.put(`http://localhost:8800/books/${id}`, book)
+          await axios.put(`${API_URL}/books/${id}`, book)
           navigate.push("/");
       } catch(err){
         console.log(err);

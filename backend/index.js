@@ -1,18 +1,53 @@
 import express from "express";
 import mysql from "mysql2";
-import cors from "cors";
 
+import cors from "cors";
+import dotenv from "dotenv";
+import fs from "fs";
 const app = express();
+
+dotenv.config();
+app.use(express.json()); // allows client send data to backend
+app.use(cors());
 
 // connecting to the backend
 const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "vicky",
-    database: "next-ts-mysql"
+    database: process.env.DB_NAME,
+    host: process.env.HOST,
+    port: process.env.PORT,
+    user: process.env.USER,
+    password: process.env.PASSWORD,
+    
+    ssl: {
+        ca: fs.readFileSync("./ca.pem")
+    }
 });
-app.use(express.json()); // allows client send data to backend
-app.use(cors());
+
+// create table if not exist
+db.connect((err) => {
+    if (err) {
+        console.error("Connection error:", err);
+        return;
+    }
+
+    console.log("Connected to MySQL");
+
+    const createTableQuery = `
+        CREATE TABLE IF NOT EXISTS books (
+            id INT NOT NULL AUTO_INCREMENT,
+            title VARCHAR(64) NOT NULL,
+            \`desc\` VARCHAR(255) NOT NULL,
+            price INT NOT NULL,
+            cover VARCHAR(255),
+            PRIMARY KEY (id)
+        )
+    `;
+
+    db.query(createTableQuery, (err) => {
+        if (err) throw err;
+        console.log("Table ready");
+    });
+});
 
 // http://localhost:8800/
 app.get("/", (req, res)=>{
@@ -86,6 +121,6 @@ app.delete("/books/:id", (req, res) => {
 })
 
 
-app.listen(8800, ()=>{
+app.listen(process.env.PORT || 3000, ()=>{
     console.log("BACKEND ON!")
 })
