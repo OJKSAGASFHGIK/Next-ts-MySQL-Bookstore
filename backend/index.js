@@ -19,7 +19,7 @@ const db = mysql.createConnection({
     password: process.env.PASSWORD,
     
     ssl: {
-        ca: fs.readFileSync("./ca.pem")
+        rejectUnauthorized: false
     }
 });
 
